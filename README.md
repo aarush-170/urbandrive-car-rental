@@ -39,4 +39,4 @@ npm install && npm run dev
 
 ## Team
 - aarush-170
-- (teammate)
+- Abhay DB (abhaydb12)
