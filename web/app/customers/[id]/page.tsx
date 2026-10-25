@@ -35,7 +35,7 @@ export default async function CustomerAudit({ params }: { params: Promise<{ id: 
               <tr key={h.booking_id}>
                 <td>{h.booking_id}</td><td>{h.vehicle}<br /><span className="muted">{h.license_plate}</span></td>
                 <td>{h.pickup_branch} <span className="muted">&rarr; {h.dropoff_branch}</span></td>
-                <td>{when(h.start_date)}<br /><span className="muted">to {when(h.end_date)}</span></td>
+                <td style={{ whiteSpace: "nowrap" }}>{when(h.start_date)}<br /><span className="muted">to {when(h.end_date)}</span></td>
                 <td>{when(h.actual_return_date)}</td><td><Badge status={h.booking_status} /></td>
                 <td className="num">{h.late_fee ? inr(h.late_fee) : "-"}</td><td className="num">{inr(h.total_amount)}</td>
               </tr>

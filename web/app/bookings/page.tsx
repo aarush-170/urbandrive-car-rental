@@ -44,7 +44,7 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
                 <td>{b.customer_name}</td>
                 <td>{b.vehicle}<br /><span className="muted">{b.license_plate}</span></td>
                 <td>{b.pickup_branch}<br /><span className="muted">&rarr; {b.dropoff_branch}</span></td>
-                <td>{when(b.start_date)}<br /><span className="muted">to {when(b.end_date)}</span>{b.actual_return_date && <><br /><span className="muted">returned {when(b.actual_return_date)}</span></>}</td>
+                <td style={{ whiteSpace: "nowrap" }}>{when(b.start_date)}<br /><span className="muted">to {when(b.end_date)}</span>{b.actual_return_date && <><br /><span className="muted">returned {when(b.actual_return_date)}</span></>}</td>
                 <td><Badge status={b.booking_status} /></td>
                 <td className="num">{b.late_fee ? inr(b.late_fee) : "-"}</td>
                 <td className="num">{inr(b.total_amount)}</td>

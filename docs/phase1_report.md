@@ -291,6 +291,24 @@ FROM vw_customer_booking_history WHERE customer_id = 2 ORDER BY start_date;
 
 ---
 
+### 5.5 Verification performed
+
+Run on MySQL 8.4.9 (local): all three scripts execute without errors and row counts match section 5.2. Checked behaviour:
+
+| Test | Result |
+|---|---|
+| `sp_create_booking` with valid input | booking 9,000 total, 30% advance payment (2,700) recorded |
+| Overlapping dates on the same vehicle | rejected: "Vehicle is already booked for these dates" |
+| Customer whose licence expires before the rental ends | rejected by trigger |
+| Booking a decommissioned vehicle | rejected by trigger |
+| `end_date` before `start_date` | rejected by CHECK `chk_booking_dates` |
+| `sp_start_rental` then `sp_return_vehicle` (5 h late, Compact) | late fee 1,000, balance payment added, vehicle Available with new mileage and branch |
+| `sp_cancel_booking` | booking Cancelled, payments marked Refunded |
+| Maintenance mileage above vehicle mileage | rejected by trigger |
+| Duplicate customer email | rejected by UNIQUE key |
+
+Through the web app's API: validation errors return 400, business-rule violations 409, and every page renders with live data from MySQL and MongoDB.
+
 ## 6. Web application (Next.js)
 
 Located in `web/`. Next.js (App Router, TypeScript) with Route Handlers as the API layer; MySQL via `mysql2` with parameterised queries; MongoDB via the official driver; input validation with `zod` on every write endpoint **and** CHECK constraints/triggers in the database. Connection settings come only from environment variables (`web/.env.example`).
