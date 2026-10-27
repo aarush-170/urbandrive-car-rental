@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ApiForm, { Field } from "@/components/ApiForm";
+import { requirePage } from "@/lib/auth";
 import { intParam, param } from "@/lib/format";
 import { branchOptions, customerOptions, getVehicle, listVehicles } from "@/lib/queries";
 import { paymentMethods } from "@/lib/validation";
@@ -7,6 +8,8 @@ import { paymentMethods } from "@/lib/validation";
 export const dynamic = "force-dynamic";
 
 export default async function NewBooking({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const session = await requirePage();
+  const isCustomer = session.role === "Customer";
   const sp = await searchParams;
   const vehicleId = intParam(sp.vehicle);
   const start = param(sp.start);
@@ -23,12 +26,16 @@ export default async function NewBooking({ searchParams }: { searchParams: Promi
       <p className="sub">The booking is created by a stored procedure inside one transaction. A 30% advance payment is recorded automatically. Double bookings and expired licences are rejected by the database.</p>
       <div className="card">
         <ApiForm endpoint="/api/bookings" submitLabel="Create booking" redirectTo="/bookings">
-          <Field label="Customer">
-            <select className="input" name="customer_id" required defaultValue="">
-              <option value="" disabled>Select customer</option>
-              {customers.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
-            </select>
-          </Field>
+          {isCustomer ? (
+            <p className="muted">Booking as {session.username}.</p>
+          ) : (
+            <Field label="Customer">
+              <select className="input" name="customer_id" required defaultValue="">
+                <option value="" disabled>Select customer</option>
+                {customers.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
+              </select>
+            </Field>
+          )}
           <Field label="Vehicle">
             <select className="input" name="vehicle_id" required defaultValue={vehicleId ?? ""}>
               <option value="" disabled>Select vehicle</option>

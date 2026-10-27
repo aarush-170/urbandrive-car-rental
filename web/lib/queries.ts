@@ -158,10 +158,12 @@ export interface BookingRow {
   initial_mileage: number;
 }
 
-export async function listBookings(status?: string): Promise<BookingRow[]> {
+export async function listBookings(status?: string, customerId?: number): Promise<BookingRow[]> {
   const params: unknown[] = [];
-  let where = "";
-  if (status) { where = "WHERE b.booking_status = ?"; params.push(status); }
+  const conds: string[] = [];
+  if (status) { conds.push("b.booking_status = ?"); params.push(status); }
+  if (customerId) { conds.push("b.customer_id = ?"); params.push(customerId); }
+  const where = conds.length ? `WHERE ${conds.join(" AND ")}` : "";
   return query<BookingRow>(
     `SELECT b.booking_id, CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
             CONCAT(v.make, ' ', v.model) AS vehicle, v.license_plate,

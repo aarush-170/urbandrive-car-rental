@@ -2,6 +2,7 @@ import Link from "next/link";
 import ActionButton from "@/components/ActionButton";
 import ApiForm, { Field } from "@/components/ApiForm";
 import Badge from "@/components/Badge";
+import { requirePage } from "@/lib/auth";
 import { inr, nowLocalInput, param, when } from "@/lib/format";
 import { listBookings } from "@/lib/queries";
 import { paymentMethods } from "@/lib/validation";
@@ -11,8 +12,10 @@ export const dynamic = "force-dynamic";
 const STATUSES = ["Confirmed", "Ongoing", "Completed", "Cancelled"];
 
 export default async function BookingsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const session = await requirePage();
+  const isCustomer = session.role === "Customer";
   const status = param((await searchParams).status);
-  const bookings = await listBookings(STATUSES.includes(status ?? "") ? status : undefined);
+  const bookings = await listBookings(STATUSES.includes(status ?? "") ? status : undefined, isCustomer ? session.customerId ?? -1 : undefined);
   const nowLocal = nowLocalInput();
 
   return (
@@ -52,11 +55,11 @@ export default async function BookingsPage({ searchParams }: { searchParams: Pro
                 <td>
                   {b.booking_status === "Confirmed" && (
                     <div style={{ display: "flex", gap: 6 }}>
-                      <ActionButton endpoint={`/api/bookings/${b.booking_id}/start`} label="Start rental" />
+                      {!isCustomer && <ActionButton endpoint={`/api/bookings/${b.booking_id}/start`} label="Start rental" />}
                       <ActionButton endpoint={`/api/bookings/${b.booking_id}/cancel`} label="Cancel" variant="danger" confirmText={`Cancel booking #${b.booking_id}? Payments received will be marked Refunded.`} />
                     </div>
                   )}
-                  {b.booking_status === "Ongoing" && (
+                  {b.booking_status === "Ongoing" && !isCustomer && (
                     <details>
                       <summary style={{ cursor: "pointer" }}>Return vehicle</summary>
                       <ApiForm endpoint={`/api/bookings/${b.booking_id}/return`} submitLabel="Complete return">

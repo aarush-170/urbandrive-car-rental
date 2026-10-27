@@ -1,11 +1,13 @@
 import Link from "next/link";
 import ApiForm, { Field } from "@/components/ApiForm";
+import { requirePage, STAFF } from "@/lib/auth";
 import { inr, param } from "@/lib/format";
 import { listCustomers } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function CustomersPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  await requirePage(STAFF);
   const q = param((await searchParams).q);
   const customers = await listCustomers(q);
   const today = new Date().toISOString().slice(0, 10);

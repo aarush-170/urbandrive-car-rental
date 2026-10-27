@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ApiForm, { Field } from "@/components/ApiForm";
 import Badge from "@/components/Badge";
+import { requirePage } from "@/lib/auth";
 import { inr, intParam, km, param } from "@/lib/format";
 import { availableVehicles, branchOptions, categoryOptions, listVehicles } from "@/lib/queries";
 
@@ -9,6 +10,7 @@ export const dynamic = "force-dynamic";
 type SP = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function VehiclesPage({ searchParams }: { searchParams: SP }) {
+  const session = await requirePage();
   const sp = await searchParams;
   const q = param(sp.q);
   const branch = intParam(sp.branch);
@@ -84,6 +86,7 @@ export default async function VehiclesPage({ searchParams }: { searchParams: SP 
         </table>
       </div>
 
+      {session.role === "Admin" && (<>
       <h2>Add a vehicle</h2>
       <div className="card">
         <ApiForm endpoint="/api/vehicles" submitLabel="Add vehicle">
@@ -101,6 +104,7 @@ export default async function VehiclesPage({ searchParams }: { searchParams: SP 
           </Field>
         </ApiForm>
       </div>
+      </>)}
     </>
   );
 }

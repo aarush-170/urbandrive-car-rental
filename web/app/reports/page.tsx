@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { ADMIN, requirePage } from "@/lib/auth";
 import { inr, intParam, km } from "@/lib/format";
 import { branchAvailability, maintenanceDue, revenueByCategory, revenueQuarters } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function ReportsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  await requirePage(ADMIN);
   const sp = await searchParams;
   const miles = intParam(sp.miles) ?? 10000;
   const quarters = await revenueQuarters();

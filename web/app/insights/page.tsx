@@ -1,3 +1,4 @@
+import { ADMIN, requirePage } from "@/lib/auth";
 import { param } from "@/lib/format";
 import { damageBySeverity, mostDamagedVehicles, popularTags, ratingByCategory, searchReviews } from "@/lib/insights";
 import { mongoConfigured } from "@/lib/mongo";
@@ -7,6 +8,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function InsightsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  await requirePage(ADMIN);
   const q = param((await searchParams).q);
 
   if (!mongoConfigured()) {

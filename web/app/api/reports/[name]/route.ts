@@ -1,3 +1,4 @@
+import { ADMIN, requireApi, STAFF } from "@/lib/auth";
 import { errorResponse, HttpError } from "@/lib/errors";
 import { branchAvailability, customerHistory, maintenanceDue, revenueByCategory, revenueQuarters } from "@/lib/queries";
 
@@ -5,6 +6,7 @@ import { branchAvailability, customerHistory, maintenanceDue, revenueByCategory,
 export async function GET(req: Request, ctx: { params: Promise<{ name: string }> }) {
   try {
     const { name } = await ctx.params;
+    await requireApi(name === "revenue" ? ADMIN : name === "availability" ? undefined : STAFF);
     const p = new URL(req.url).searchParams;
     switch (name) {
       case "revenue": {
