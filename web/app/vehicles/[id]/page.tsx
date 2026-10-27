@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ActionButton from "@/components/ActionButton";
 import ApiForm, { Field } from "@/components/ApiForm";
 import Badge from "@/components/Badge";
+import { requirePage, STAFF } from "@/lib/auth";
 import { inr, km, when } from "@/lib/format";
 import { inspectionsForVehicle, reviewsForVehicle, InspectionView, ReviewView } from "@/lib/insights";
 import { mongoConfigured } from "@/lib/mongo";
@@ -21,12 +22,15 @@ async function loadDocs(id: number): Promise<{ reviews: ReviewView[]; inspection
 }
 
 export default async function VehicleDetail({ params }: { params: Promise<{ id: string }> }) {
+  const session = await requirePage();
+  const isStaff = STAFF.includes(session.role);
   const id = Number((await params).id);
   if (!Number.isInteger(id) || id <= 0) notFound();
   const vehicle = await getVehicle(id);
   if (!vehicle) notFound();
 
-  const [maintenance, allBookings, docs] = await Promise.all([listMaintenance(id), listBookings(), loadDocs(id)]);
+  const [maintenance, allBookings, docs] = await Promise.all([listMaintenance(id), listBookings(undefined, isStaff ? undefined : session.customerId ?? -1), loadDocs(id)]);
+  // customers only see their own bookings of this vehicle
   const bookings = allBookings.filter((b) => b.license_plate === vehicle.license_plate);
   const completed = (await Promise.resolve(bookings)).filter((b) => b.booking_status === "Completed");
   const avg = docs.reviews.length ? docs.reviews.reduce((s, r) => s + r.rating, 0) / docs.reviews.length : null;
@@ -39,7 +43,7 @@ export default async function VehicleDetail({ params }: { params: Promise<{ id: 
         {vehicle.license_plate} &middot; VIN {vehicle.vin} &middot; {vehicle.manufacture_year} &middot; {vehicle.category_name} ({inr(vehicle.base_rate_per_day)}/day)
         &middot; {vehicle.branch_name}, {vehicle.city} &middot; {km(vehicle.current_mileage)} mi
       </p>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      {isStaff && <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         {vehicle.status !== "Rented" && vehicle.status !== "In_Maintenance" && (
           <ActionButton endpoint={`/api/vehicles/${id}`} method="PATCH" body={{ status: "In_Maintenance" }} label="Send to workshop" />
         )}
@@ -52,8 +56,9 @@ export default async function VehicleDetail({ params }: { params: Promise<{ id: 
         {vehicle.status === "Decommissioned" && (
           <ActionButton endpoint={`/api/vehicles/${id}`} method="PATCH" body={{ status: "Available" }} label="Reinstate" />
         )}
-      </div>
+      </div>}
 
+      {isStaff && <>
       <h2>Maintenance history</h2>
       <div className="tbl-wrap">
         <table className="tbl">
@@ -67,7 +72,9 @@ export default async function VehicleDetail({ params }: { params: Promise<{ id: 
         </table>
       </div>
 
-      <h2>Booking history</h2>
+      </>}
+
+      <h2>{isStaff ? "Booking history" : "Your bookings of this vehicle"}</h2>
       <div className="tbl-wrap">
         <table className="tbl">
           <thead><tr><th>#</th><th>Customer</th><th>From</th><th>To</th><th>Status</th><th className="num">Late fee</th><th className="num">Total</th></tr></thead>
@@ -112,6 +119,7 @@ export default async function VehicleDetail({ params }: { params: Promise<{ id: 
             ))}
           </div>
 
+          {isStaff && <>
           <h2>Record an inspection</h2>
           <div className="card">
             <ApiForm endpoint={`/api/vehicles/${id}/inspections`} submitLabel="Save inspection">
@@ -130,6 +138,8 @@ export default async function VehicleDetail({ params }: { params: Promise<{ id: 
               <Field label="Damage note"><input className="input" name="damage_note" /></Field>
             </ApiForm>
           </div>
+
+          </>}
 
           <h2>Add a review</h2>
           <div className="card">

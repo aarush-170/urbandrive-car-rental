@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Badge from "@/components/Badge";
+import { requirePage } from "@/lib/auth";
 import { inr, when } from "@/lib/format";
 import { customerHistory, getCustomer } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function CustomerAudit({ params }: { params: Promise<{ id: string }> }) {
+  const session = await requirePage();
   const id = Number((await params).id);
   if (!Number.isInteger(id) || id <= 0) notFound();
+  // customers can open only their own profile
+  if (session.role === "Customer" && session.customerId !== id) notFound();
   const customer = await getCustomer(id);
   if (!customer) notFound();
   const history = await customerHistory(id);
@@ -16,7 +20,7 @@ export default async function CustomerAudit({ params }: { params: Promise<{ id: 
 
   return (
     <>
-      <p><Link href="/customers">&larr; All customers</Link></p>
+      {session.role !== "Customer" && <p><Link href="/customers">&larr; All customers</Link></p>}
       <h1>{customer.first_name} {customer.last_name}</h1>
       <p className="sub">{customer.email} &middot; {customer.phone} &middot; licence {customer.license_number} (expires {customer.license_expiry_date})</p>
 

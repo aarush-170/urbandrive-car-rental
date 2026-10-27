@@ -1,12 +1,14 @@
 import Link from "next/link";
 import ActionButton from "@/components/ActionButton";
 import ApiForm, { Field } from "@/components/ApiForm";
+import { requirePage, STAFF } from "@/lib/auth";
 import { inr, km } from "@/lib/format";
 import { listMaintenance, maintenanceDue, vehicleOptions } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function MaintenancePage() {
+  const session = await requirePage(STAFF);
   const [records, due, vehicles] = await Promise.all([listMaintenance(), maintenanceDue(), vehicleOptions()]);
   const today = new Date().toISOString().slice(0, 10);
 
@@ -55,7 +57,7 @@ export default async function MaintenancePage() {
               <tr key={m.maintenance_id}>
                 <td>{m.service_date}</td><td>{m.vehicle} <span className="muted">{m.license_plate}</span></td><td>{m.service_type}</td>
                 <td className="num">{km(m.mileage_at_service)}</td><td className="num">{inr(m.cost)}</td><td>{m.notes}</td>
-                <td><ActionButton endpoint={`/api/maintenance/${m.maintenance_id}`} method="DELETE" label="Delete" variant="danger" confirmText="Delete this service record?" /></td>
+                <td>{session.role === "Admin" && <ActionButton endpoint={`/api/maintenance/${m.maintenance_id}`} method="DELETE" label="Delete" variant="danger" confirmText="Delete this service record?" />}</td>
               </tr>
             ))}
           </tbody>

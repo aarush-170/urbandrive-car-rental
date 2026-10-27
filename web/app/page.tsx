@@ -1,11 +1,13 @@
 import Link from "next/link";
 import Badge from "@/components/Badge";
 import { inr, km, when } from "@/lib/format";
+import { requirePage, STAFF } from "@/lib/auth";
 import { dashboardStats, listBookings, maintenanceDue, revenueByCategory, revenueQuarters } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
+  const session = await requirePage(STAFF);
   const [stats, bookings, due, quarters] = await Promise.all([
     dashboardStats(), listBookings(), maintenanceDue(), revenueQuarters(),
   ]);
@@ -46,7 +48,7 @@ export default async function Dashboard() {
             <span style={{ textAlign: "right" }}>{inr(r.revenue)}</span>
           </div>
         ))}
-        <p style={{ marginTop: 8 }}><Link href="/reports">Open full reports</Link></p>
+        <p style={{ marginTop: 8 }}>{session.role === "Admin" && <Link href="/reports">Open full reports</Link>}</p>
       </div>
 
       <h2>Active and upcoming rentals</h2>

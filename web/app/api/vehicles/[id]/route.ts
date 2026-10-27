@@ -1,3 +1,4 @@
+import { requireApi, STAFF } from "@/lib/auth";
 import { execute } from "@/lib/db";
 import { errorResponse, HttpError, readJson } from "@/lib/errors";
 import { vehicleStatusSchema } from "@/lib/validation";
@@ -6,6 +7,7 @@ import { vehicleStatusSchema } from "@/lib/validation";
 // A Rented vehicle can only change through its booking (return/cancel), never directly.
 export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
+    await requireApi(STAFF);
     const { id } = await ctx.params;
     const { status } = vehicleStatusSchema.parse(await readJson(req));
     const res = await execute("UPDATE Vehicle SET status = ? WHERE vehicle_id = ? AND status <> 'Rented'", [status, Number(id)]);

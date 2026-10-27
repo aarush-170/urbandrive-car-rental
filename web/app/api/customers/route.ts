@@ -1,3 +1,4 @@
+import { requireApi, STAFF } from "@/lib/auth";
 import { execute, one } from "@/lib/db";
 import { errorResponse, readJson } from "@/lib/errors";
 import { listCustomers } from "@/lib/queries";
@@ -5,6 +6,7 @@ import { customerSchema } from "@/lib/validation";
 
 export async function GET(req: Request) {
   try {
+    await requireApi(STAFF);
     return Response.json(await listCustomers(new URL(req.url).searchParams.get("q") ?? undefined));
   } catch (e) {
     return errorResponse(e);
@@ -13,6 +15,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    await requireApi(STAFF);
     const c = customerSchema.parse(await readJson(req));
     const res = await execute(
       "INSERT INTO Customer (first_name, last_name, email, phone, license_number, license_expiry_date) VALUES (?, ?, ?, ?, ?, ?)",

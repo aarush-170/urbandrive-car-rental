@@ -39,6 +39,13 @@ export const vehicleStatusSchema = z.object({
   status: z.enum(["Available", "In_Maintenance", "Decommissioned"]),
 });
 
+// 'YYYY-MM-DD HH:mm:00' for the current minute in the server's timezone (same shape as the parsed dates)
+const localNow = () => {
+  const d = new Date();
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:00`;
+};
+
 export const bookingSchema = z
   .object({
     customer_id: id,
@@ -49,7 +56,8 @@ export const bookingSchema = z
     end_date: dateTime,
     payment_method: method,
   })
-  .refine((b) => b.end_date > b.start_date, { message: "end_date must be after start_date", path: ["end_date"] });
+  .refine((b) => b.end_date > b.start_date, { message: "end_date must be after start_date", path: ["end_date"] })
+  .refine((b) => b.start_date >= localNow(), { message: "start_date cannot be in the past", path: ["start_date"] });
 
 export const returnSchema = z.object({
   return_mileage: z.coerce.number().int().min(0),

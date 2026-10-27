@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import LogoutButton from "@/components/LogoutButton";
+import { getSession, type Role } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,17 +20,18 @@ export const metadata: Metadata = {
   description: "Car rental and fleet management for distributed branches",
 };
 
-const links = [
-  ["/", "Dashboard"],
-  ["/vehicles", "Vehicles"],
-  ["/bookings", "Bookings"],
-  ["/customers", "Customers"],
-  ["/maintenance", "Maintenance"],
-  ["/reports", "Reports"],
-  ["/insights", "Insights"],
-] as const;
+const links: [string, string, Role[]][] = [
+  ["/", "Dashboard", ["Admin", "Branch_Manager"]],
+  ["/vehicles", "Vehicles", ["Admin", "Branch_Manager", "Customer"]],
+  ["/bookings", "Bookings", ["Admin", "Branch_Manager", "Customer"]],
+  ["/customers", "Customers", ["Admin", "Branch_Manager"]],
+  ["/maintenance", "Maintenance", ["Admin", "Branch_Manager"]],
+  ["/reports", "Reports", ["Admin"]],
+  ["/insights", "Insights", ["Admin"]],
+];
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const session = await getSession();
   return (
     <html
       lang="en"
@@ -38,9 +41,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <header className="nav">
           <nav style={{ maxWidth: 1180, margin: "0 auto", padding: "10px 16px", display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
             <strong style={{ marginRight: 14 }}>UrbanDrive</strong>
-            {links.map(([href, label]) => (
+            {session && links.filter(([, , roles]) => roles.includes(session.role)).map(([href, label]) => (
               <Link key={href} href={href}>{label}</Link>
             ))}
+            {session && (
+              <span style={{ marginLeft: "auto", display: "flex", gap: 10, alignItems: "center" }}>
+                <span className="muted">{session.username} ({session.role.replace("_", " ")})</span>
+                <LogoutButton />
+              </span>
+            )}
           </nav>
         </header>
         <main className="page">{children}</main>

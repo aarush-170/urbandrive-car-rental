@@ -5,3 +5,5 @@ node_modules/
 !.env.example
 *.log
 .DS_Store
+dev.log
+dev.err

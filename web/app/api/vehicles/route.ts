@@ -1,3 +1,4 @@
+import { ADMIN, requireApi } from "@/lib/auth";
 import { execute, one } from "@/lib/db";
 import { errorResponse, HttpError, readJson } from "@/lib/errors";
 import { availableVehicles, listVehicles } from "@/lib/queries";
@@ -9,6 +10,7 @@ const num = (v: string | null) => (v && /^\d+$/.test(v) ? Number(v) : undefined)
 // GET /api/vehicles?available=1&start=...&end=...           -> inventory availability for a date range
 export async function GET(req: Request) {
   try {
+    await requireApi();
     const p = new URL(req.url).searchParams;
     if (p.get("available")) {
       const start = p.get("start");
@@ -28,6 +30,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    await requireApi(ADMIN);
     const v = vehicleSchema.parse(await readJson(req));
     const res = await execute(
       `INSERT INTO Vehicle (vin, license_plate, make, model, manufacture_year, current_mileage, status, category_id, current_branch_id)

@@ -1,3 +1,4 @@
+import { requireApi, STAFF } from "@/lib/auth";
 import { one } from "@/lib/db";
 import { errorResponse, HttpError, readJson } from "@/lib/errors";
 import { inspectionsForVehicle } from "@/lib/insights";
@@ -6,6 +7,7 @@ import { inspectionSchema } from "@/lib/validation";
 
 export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
+    await requireApi(STAFF);
     return Response.json(await inspectionsForVehicle(Number((await ctx.params).id)));
   } catch (e) {
     return errorResponse(e);
@@ -15,6 +17,7 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
 // POST: store a pickup/return inspection (flexible document: damages list, fuel or battery level).
 export async function POST(req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
+    await requireApi(STAFF);
     const vehicleId = Number((await ctx.params).id);
     const b = inspectionSchema.parse(await readJson(req));
     const booking = await one("SELECT booking_id FROM Rental_Booking WHERE booking_id = ? AND vehicle_id = ?", [b.booking_id, vehicleId]);
