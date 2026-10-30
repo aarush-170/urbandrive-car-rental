@@ -28,6 +28,7 @@ const links: [string, string, Role[]][] = [
   ["/maintenance", "Maintenance", ["Admin", "Branch_Manager"]],
   ["/reports", "Reports", ["Admin"]],
   ["/insights", "Insights", ["Admin"]],
+  ["/admin/users", "Users", ["Admin"]],
 ];
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
