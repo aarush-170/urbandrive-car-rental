@@ -167,3 +167,43 @@ test("TC17 logout clears the session cookie", async () => {
   assert.equal(out.status, 200);
   assert.match(out.setCookie, /ud_session=;|Max-Age=0|Expires=Thu, 01 Jan 1970/i);
 });
+
+// ---- admin user management ----
+// Each run creates users with a unique name; there is no delete endpoint, so they stay in User_Account.
+const stamp = Date.now();
+const newUser = (suffix, extra = {}) => ({
+  username: `t_${suffix}_${stamp}`, email: `t_${suffix}_${stamp}@urbandrive.example`,
+  password: "Sup3rSecret!", role: "Branch_Manager", branch_id: 1, ...extra,
+});
+
+test("TC18 admin creates a user; the new account can log in and the hash is never exposed", async () => {
+  const u = newUser("ok");
+  const r = await api("/api/users", { method: "POST", body: u, cookie: admin.cookie });
+  assert.equal(r.status, 201);
+  assert.ok(!JSON.stringify(r.json).includes("$2"));
+  const again = await login(u.username, u.password);
+  assert.equal(again.status, 200);
+  assert.equal(again.json.role, "Branch_Manager");
+  const list = await api("/api/users", { cookie: admin.cookie });
+  assert.equal(list.status, 200);
+  assert.ok(list.json.some((x) => x.username === u.username));
+  assert.ok(!JSON.stringify(list.json).includes("password_hash"));
+  // chk_user_link: a Customer account must name a customer
+  const bad = await api("/api/users", { method: "POST", body: newUser("nolink", { role: "Customer", branch_id: undefined }), cookie: admin.cookie });
+  assert.equal(bad.status, 400);
+});
+
+test("TC19 branch managers and customers cannot create or list users (403)", async () => {
+  for (const who of [manager, customer]) {
+    assert.equal((await api("/api/users", { method: "POST", body: newUser("denied"), cookie: who.cookie })).status, 403);
+    assert.equal((await api("/api/users", { cookie: who.cookie })).status, 403);
+  }
+  assert.equal((await api("/admin/users", { cookie: manager.cookie })).status, 307);
+});
+
+test("TC20 a duplicate username is rejected with 409", async () => {
+  const u = newUser("dup");
+  assert.equal((await api("/api/users", { method: "POST", body: u, cookie: admin.cookie })).status, 201);
+  const second = await api("/api/users", { method: "POST", body: { ...u, email: `other_${u.email}` }, cookie: admin.cookie });
+  assert.equal(second.status, 409);
+});

@@ -90,3 +90,22 @@ export const reviewSchema = z.object({
   comment: z.string().trim().min(3).max(500),
   tags: z.string().trim().max(100).optional().default(""),
 });
+
+export const userRoles = ["Admin", "Branch_Manager", "Customer"] as const;
+
+// bcrypt only uses the first 72 bytes, so longer passwords are refused instead of silently truncated.
+export const userSchema = z
+  .object({
+    username: z.string().trim().regex(/^[A-Za-z0-9_.-]{3,50}$/, "3-50 letters, digits, dot, dash or underscore"),
+    email: z.string().trim().email().max(100),
+    password: z.string().min(8, "at least 8 characters").max(72),
+    role: z.enum(userRoles),
+    customer_id: id.optional(),
+    branch_id: id.optional(),
+  })
+  .superRefine((u, ctx) => {
+    if (u.role === "Customer" && u.customer_id === undefined)
+      ctx.addIssue({ code: "custom", path: ["customer_id"], message: "required for a Customer account" });
+    if (u.role === "Branch_Manager" && u.branch_id === undefined)
+      ctx.addIssue({ code: "custom", path: ["branch_id"], message: "required for a Branch_Manager account" });
+  });

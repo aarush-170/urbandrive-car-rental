@@ -9,6 +9,7 @@ const PAGE_ROLES: [string, Role[]][] = [
   ["/maintenance", ["Admin", "Branch_Manager"]],
   ["/reports", ["Admin"]],
   ["/insights", ["Admin"]],
+  ["/admin", ["Admin"]],
 ];
 
 export async function proxy(req: NextRequest) {
