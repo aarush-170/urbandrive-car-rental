@@ -205,6 +205,8 @@ vehicle_reviews {
 ```
 
 Indexes: `vehicle_inspections` on `(vehicle_id, inspected_at desc)`, `(booking_id, type)`, `damages.severity`; `vehicle_reviews` on `(vehicle_id, created_at desc)`, `(category_id, rating desc)` and a **text index** on `comment` and `tags`.
+![MongoDB document model](diagrams/mongodb_model.png)
+
 Vector search was not chosen: the data is small and the review search needs keyword relevance, not semantic similarity.
 
 ---
@@ -324,6 +326,8 @@ Located in `web/`. Next.js (App Router, TypeScript) with Route Handlers as the A
 | Reports | Revenue by category per quarter, miles-since-service with adjustable threshold, availability by branch and category |
 | Insights | MongoDB aggregations and review text search |
 
+![System architecture](diagrams/architecture.png)
+
 Run instructions are in the root `README.md`.
 
 ---
@@ -331,6 +335,8 @@ Run instructions are in the root `README.md`.
 ## 7. Plan for the next phase
 
 **Done in this phase:** problem statement, ER diagram (corrected model), relational schema, database choice, MySQL creation and seed data, advanced SQL objects, MongoDB model and seed, Next.js interface with API routes.
+
+![Role permission matrix (proposed)](diagrams/roles_matrix.png)
 
 **Remaining**
 1. **Authentication and roles** – login with the bcrypt-hashed `User_Account` table, sessions, and role checks (Customer sees only their bookings; Branch Manager only their branch; Admin sees reports and maintenance).

@@ -1,0 +1,64 @@
+<!doctype html><meta charset="utf-8">
+<body style="margin:0;background:#fff">
+<svg id="s" xmlns="http://www.w3.org/2000/svg" width="1790" height="880" viewBox="0 0 1790 880" font-family="Segoe UI,Arial,sans-serif"></svg>
+<script>
+const NS="http://www.w3.org/2000/svg", s=document.getElementById("s");
+const W=340, RH=22, HH=32;
+function el(n,a,t){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t!==undefined)e.textContent=t;s.appendChild(e);return e}
+// [name, x, y, color, rows: [text, kind]] kind: pk | fk | uk | ""
+const T=[
+["Customer",30,50,"#e8f0fe",[["customer_id","pk"],["first_name",""],["last_name",""],["email","uk"],["phone",""],["license_number","uk"],["license_expiry_date",""]]],
+["User_Account",30,330,"#f3e8fd",[["user_id","pk"],["username","uk"],["email","uk"],["password_hash",""],["role",""],["customer_id → Customer","fk"],["branch_id → Branch","fk"],["created_at",""]]],
+["Rental_Booking",490,50,"#fff4e0",[["booking_id","pk"],["customer_id → Customer","fk"],["vehicle_id → Vehicle","fk"],["pickup_branch_id → Branch","fk"],["dropoff_branch_id → Branch","fk"],["start_date",""],["end_date",""],["actual_return_date",""],["initial_mileage",""],["return_mileage",""],["booking_status",""],["late_fee",""],["total_amount",""]]],
+["Branch",490,470,"#e6f4ea",[["branch_id","pk"],["branch_name",""],["city",""],["address",""],["contact_number",""],["capacity",""]]],
+["Payment",950,50,"#fdecea",[["payment_id","pk"],["booking_id → Rental_Booking","fk"],["payment_date",""],["payment_method",""],["amount_paid",""],["payment_status",""]]],
+["Vehicle",950,290,"#e6f4ea",[["vehicle_id","pk"],["vin","uk"],["license_plate","uk"],["make",""],["model",""],["manufacture_year",""],["current_mileage",""],["status",""],["category_id → Vehicle_Category","fk"],["current_branch_id → Branch","fk"]]],
+["Vehicle_Category",1410,290,"#e8f0fe",[["category_id","pk"],["category_name","uk"],["base_rate_per_day",""],["late_fee_per_hour",""],["security_deposit",""]]],
+["Maintenance_Record",1410,470,"#fff4e0",[["maintenance_id","pk"],["vehicle_id → Vehicle","fk"],["service_date",""],["service_type",""],["mileage_at_service",""],["cost",""],["notes",""]]],
+];
+// lines first so boxes sit on top
+function line(x1,y1,x2,y2,c1,c2,label,lx,ly,anchor){
+  el("line",{x1,y1,x2,y2,stroke:"#444","stroke-width":2});
+  const vert=x1===x2;
+  const a=vert?{x:x1+8,y:y1+(y2>y1?20:-8)}:{x:x1+(x2>x1?8:-8),y:y1-8};
+  const b=vert?{x:x2+8,y:y2+(y2>y1?-8:20)}:{x:x2+(x2>x1?-8:8),y:y2-8};
+  const an=vert?"start":(x2>x1?"start":"end"), bn=vert?"start":(x2>x1?"end":"start");
+  el("text",{x:a.x,y:a.y,"font-size":15,"font-weight":700,fill:"#b00020","text-anchor":an},c1);
+  el("text",{x:b.x,y:b.y,"font-size":15,"font-weight":700,fill:"#b00020","text-anchor":bn},c2);
+  el("text",{x:lx,y:ly,"font-size":13,"font-style":"italic",fill:"#333","text-anchor":anchor||"middle"},label);
+}
+el("rect",{width:1790,height:880,fill:"#fff"});
+el("text",{x:895,y:32,"font-size":24,"font-weight":600,"text-anchor":"middle",fill:"#222"},"UrbanDrive ER diagram (corrected model, 8 tables)");
+line(370,130,490,130,"1","N","places",430,120);
+line(830,130,950,130,"1","N","generates",890,120);
+line(830,330,950,330,"1","N","booked as",890,320);
+line(600,366,600,470,"1","N","pickup at",595,420,"end");
+line(720,366,720,470,"1","N","drop-off at",730,420,"start");
+line(830,520,950,520,"1","N","houses",890,510);
+line(370,500,490,500,"1","N","manages",430,490);
+line(200,234,200,330,"1","0..1","has login",210,285,"start");
+line(1290,350,1410,350,"1","N","categorizes",1350,340);
+line(1290,500,1410,500,"1","N","undergoes",1350,490);
+for(const [n,x,y,col,rows] of T){
+  const h=HH+rows.length*RH;
+  el("rect",{x,y,width:W,height:h,fill:"#fff",stroke:"#333","stroke-width":2,rx:6});
+  el("rect",{x,y,width:W,height:HH,fill:col,stroke:"#333","stroke-width":2,rx:6});
+  el("text",{x:x+W/2,y:y+22,"font-size":17,"font-weight":700,"text-anchor":"middle",fill:"#222"},n);
+  rows.forEach(([t,k],i)=>{
+    const yy=y+HH+i*RH+16;
+    const e=el("text",{x:x+12,y:yy,"font-size":14,fill:"#222","font-family":"Consolas,monospace"},t);
+    if(k==="pk"){e.setAttribute("font-weight","700");e.setAttribute("text-decoration","underline");}
+    if(k==="fk"){e.setAttribute("font-style","italic");e.setAttribute("fill","#1b4fb3");}
+    const tag={pk:"PK",fk:"FK",uk:"UK"}[k];
+    if(tag)el("text",{x:x+W-10,y:yy,"font-size":12,"text-anchor":"end",fill:"#666"},tag);
+  });
+}
+el("text",{x:30,y:620,"font-size":14,"font-weight":700,fill:"#222"},"Legend");
+el("text",{x:30,y:644,"font-size":14,"font-weight":700,"text-decoration":"underline",fill:"#222","font-family":"Consolas,monospace"},"underlined bold = primary key (PK)");
+el("text",{x:30,y:666,"font-size":14,"font-style":"italic",fill:"#1b4fb3","font-family":"Consolas,monospace"},"blue italic = foreign key (FK → table)");
+el("text",{x:30,y:688,"font-size":14,fill:"#222","font-family":"Consolas,monospace"},"UK = unique key");
+el("text",{x:30,y:712,"font-size":14,fill:"#b00020","font-weight":700},"1 / N / 0..1 = cardinality at each end");
+el("text",{x:30,y:742,"font-size":13,fill:"#444"},"A booking has one pickup and one drop-off branch (two FKs to Branch).");
+el("text",{x:30,y:762,"font-size":13,fill:"#444"},"A customer has at most one login; a Branch_Manager account links a branch.");
+el("text",{x:30,y:782,"font-size":13,fill:"#444"},"Source: docs/phase1_report.md section 2 and database/01_schema.sql.");
+</script>

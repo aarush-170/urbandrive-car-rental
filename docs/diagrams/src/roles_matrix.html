@@ -1,0 +1,34 @@
+<!doctype html><meta charset="utf-8">
+<style>
+body{margin:0;background:#fff;font-family:Segoe UI,Arial,sans-serif;color:#222}
+.wrap{width:1000px;padding:24px 30px;box-sizing:border-box}
+h1{font-size:24px;margin:0 0 4px;text-align:center}
+p.s{text-align:center;margin:0 0 16px;font-size:14px;color:#555}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid #bbb;padding:8px 10px;text-align:center}
+th{background:#eef2f7}
+td:first-child{text-align:left;font-weight:600}
+.y{background:#e6f4ea;color:#1d6b38;font-weight:700}
+.n{background:#fdecea;color:#a12a20}
+.p{background:#fff4e0;color:#8a5a00;font-size:13px}
+.k{margin-top:12px;font-size:13px;color:#555}
+</style>
+<div class="wrap">
+<h1>Role permission matrix</h1>
+<p class="s">Proposed design based on the roles in the Phase 1 report; check it against the implemented rules before presenting.</p>
+<table>
+<tr><th>Capability</th><th>Admin</th><th>Branch Manager</th><th>Customer</th></tr>
+<tr><td>View dashboard and revenue reports</td><td class="y">Yes</td><td class="n">No</td><td class="n">No</td></tr>
+<tr><td>View vehicles and availability</td><td class="y">All</td><td class="p">Own branch</td><td class="y">Yes</td></tr>
+<tr><td>Add vehicle / change vehicle status</td><td class="y">Yes</td><td class="p">Own branch</td><td class="n">No</td></tr>
+<tr><td>Create booking</td><td class="y">Yes</td><td class="p">Own branch</td><td class="p">For self</td></tr>
+<tr><td>Start rental / return vehicle</td><td class="y">Yes</td><td class="p">Own branch</td><td class="n">No</td></tr>
+<tr><td>Cancel booking</td><td class="y">Yes</td><td class="p">Own branch</td><td class="p">Own booking</td></tr>
+<tr><td>View customers and audit history</td><td class="y">All</td><td class="p">Own branch</td><td class="p">Self only</td></tr>
+<tr><td>Maintenance log: view / add / delete</td><td class="y">Yes</td><td class="p">Own branch (view, add)</td><td class="n">No</td></tr>
+<tr><td>Post inspection</td><td class="y">Yes</td><td class="y">Yes</td><td class="n">No</td></tr>
+<tr><td>Post review (completed booking)</td><td class="n">No</td><td class="n">No</td><td class="p">Own booking</td></tr>
+<tr><td>Insights (MongoDB aggregations)</td><td class="y">Yes</td><td class="n">No</td><td class="n">No</td></tr>
+</table>
+<div class="k">Green = allowed, orange = allowed with a scope limit, red = denied. Passwords are stored as bcrypt hashes in User_Account; the account links a Customer to customer_id and a Branch Manager to branch_id.</div>
+</div>
