@@ -207,3 +207,58 @@ test("TC20 a duplicate username is rejected with 409", async () => {
   const second = await api("/api/users", { method: "POST", body: { ...u, email: `other_${u.email}` }, cookie: admin.cookie });
   assert.equal(second.status, 409);
 });
+
+// ---- more coverage ----
+test("TC21 a branch manager can change a vehicle's status, and an invalid status is rejected", async () => {
+  try {
+    const down = await api("/api/vehicles/3", { method: "PATCH", body: { status: "In_Maintenance" }, cookie: manager.cookie });
+    assert.equal(down.status, 200);
+    const bad = await api("/api/vehicles/3", { method: "PATCH", body: { status: "Rented" }, cookie: manager.cookie });
+    assert.equal(bad.status, 400); // Rented is only reachable through a booking
+  } finally {
+    const up = await api("/api/vehicles/3", { method: "PATCH", body: { status: "Available" }, cookie: admin.cookie });
+    assert.equal(up.status, 200);
+  }
+});
+
+test("TC22 maintenance: insert, only an admin may delete it, and a second delete is 404", async () => {
+  const add = await api("/api/maintenance", {
+    method: "POST", cookie: manager.cookie,
+    body: { vehicle_id: 1, service_date: "2026-10-01", service_type: "Test service", mileage_at_service: 12000, cost: 500 },
+  });
+  assert.equal(add.status, 201);
+  const id = add.json.maintenance_id;
+  assert.equal((await api(`/api/maintenance/${id}`, { method: "DELETE", cookie: manager.cookie })).status, 403);
+  assert.equal((await api(`/api/maintenance/${id}`, { method: "DELETE", cookie: admin.cookie })).status, 200);
+  assert.equal((await api(`/api/maintenance/${id}`, { method: "DELETE", cookie: admin.cookie })).status, 404);
+});
+
+test("TC23 MongoDB inspections: staff can post, customers cannot, booking must match the vehicle", async () => {
+  const doc = { booking_id: 1, type: "return", odometer: 12480, fuel_level: "3/4", damage_part: "mirror", damage_severity: "minor" };
+  assert.equal((await api("/api/vehicles/1/inspections", { method: "POST", body: doc, cookie: manager.cookie })).status, 201);
+  assert.equal((await api("/api/vehicles/1/inspections", { method: "POST", body: doc, cookie: customer.cookie })).status, 403);
+  // booking 2 belongs to vehicle 2, not vehicle 1
+  assert.equal((await api("/api/vehicles/1/inspections", { method: "POST", body: { ...doc, booking_id: 2 }, cookie: manager.cookie })).status, 400);
+  const list = await api("/api/vehicles/1/inspections", { cookie: manager.cookie });
+  assert.equal(list.status, 200);
+  assert.ok(list.json.length > 0);
+});
+
+test("TC24 reviews: one per booking, only your own booking, rating must be 1 to 5", async () => {
+  const review = { booking_id: 1, rating: 5, comment: "second review", tags: "clean" };
+  // seeded booking 1 (customer 1, vehicle 1) already has a review
+  assert.equal((await api("/api/vehicles/1/reviews", { method: "POST", body: review, cookie: customer.cookie })).status, 409);
+  // booking 2 belongs to another customer
+  assert.equal((await api("/api/vehicles/2/reviews", { method: "POST", body: { ...review, booking_id: 2 }, cookie: customer.cookie })).status, 403);
+  assert.equal((await api("/api/vehicles/1/reviews", { method: "POST", body: { ...review, rating: 6 }, cookie: customer.cookie })).status, 400);
+});
+
+test("TC25 customer search with ?q= filters by name and returns nothing for no match", async () => {
+  const hit = await api("/api/customers?q=Rohan", { cookie: admin.cookie });
+  assert.equal(hit.status, 200);
+  assert.ok(hit.json.length >= 1);
+  assert.ok(hit.json.every((c) => `${c.first_name} ${c.last_name} ${c.email} ${c.license_number}`.toLowerCase().includes("rohan")));
+  const none = await api("/api/customers?q=zzzz-no-such-customer", { cookie: admin.cookie });
+  assert.equal(none.status, 200);
+  assert.equal(none.json.length, 0);
+});
