@@ -286,6 +286,14 @@ Automated suite: `web/tests/api.test.mjs` (Node's built-in test runner; start th
 | TC15 | Availability search; end before start | 200 / 400 | Pass |
 | TC16 | Review for a booking that is not a completed booking of the vehicle | 400 | Pass |
 | TC17 | Logout clears cookie | cookie removed | Pass |
+| TC18 | Admin creates a user; new account logs in; hash never returned; Customer role without customer is refused | 201 / 200 / 400 | Not yet run |
+| TC19 | Manager and customer create or list users; manager opens the admin page | 403 / redirect | Not yet run |
+| TC20 | Duplicate username | 409 | Not yet run |
+| TC21 | Manager changes vehicle status; `Rented` refused | 200 / 400 | Not yet run |
+| TC22 | Maintenance insert; manager delete refused; admin delete; second delete | 201 / 403 / 200 / 404 | Not yet run |
+| TC23 | Staff posts an inspection; customer refused; booking of another vehicle | 201 / 403 / 400 | Not yet run |
+| TC24 | Second review of a booking; review of another customer's booking; rating 6 | 409 / 403 / 400 | Not yet run |
+| TC25 | Customer search with `?q=` and with no match | matching rows / empty | Not yet run |
 
 Direct SQL checks (run in MySQL):
 
@@ -321,4 +329,19 @@ Direct SQL checks (run in MySQL):
 
 UrbanDrive combines a relational core (MySQL) that keeps rentals and money consistent with a document store (MongoDB) for variable inspection and review data, behind a role-based Next.js application. The database enforces the business rules itself, so the rules hold no matter which client writes the data.
 
-Possible next steps: an admin screen to create and disable user accounts and reset passwords; password change for customers; rate limiting on login; payment-gateway integration; photo upload for inspections (the `photos` array is already in the model); embeddings of review text for semantic search if the review volume grows; automated database backups.
+Possible next steps: disabling user accounts and resetting passwords (creating accounts is done, see `/admin/users`); password change for customers; rate limiting on login; payment-gateway integration; photo upload for inspections (the `photos` array is already in the model); embeddings of review text for semantic search if the review volume grows; automated database backups.
+
+## 13. Contributions
+
+Draft written from the Git history; each member must check it and correct it before submission.
+
+| Area | Who | Notes |
+|---|---|---|
+| Schema, seed data, views, triggers, procedures, MongoDB seed, web app, phase 1 report | aarush-170 | Commits `223ccc1` to `1400715` |
+| Authentication and roles, ALTER examples, test suite TC01 to TC17, this report, screenshots | aarush-170 | Commit `46660ac`. Written with AI assistance (Claude) |
+| Normalization analysis (`docs/normalization.md`) | abhaydb12 | Drafted with AI assistance (Claude); branch `abhay-normalization` |
+| Architecture, MongoDB model, role matrix and generated ER diagram (`docs/diagrams/`) | abhaydb12 | Drafted with AI assistance (Claude); branch `abhay-diagrams` |
+| Admin user management: page, `POST/GET /api/users`, validation, tests TC18 to TC20 | abhaydb12 | Written with AI assistance (Claude); branch `abhay-user-admin` |
+| Tests TC21 to TC25 | abhaydb12 | Written with AI assistance (Claude); branch `abhay-tests-docs` |
+
+**Use of AI tools.** AI tools (Claude) helped write much of the code, tests, diagrams and documentation in this project, including the login, the test suite, this report and the screenshots. Tests TC18 to TC25 had not been run when this section was written; their results above are marked accordingly and must be filled in after a real run.
