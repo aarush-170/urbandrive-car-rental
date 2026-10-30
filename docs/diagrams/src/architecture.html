@@ -1,0 +1,74 @@
+<!doctype html><meta charset="utf-8">
+<style>
+body{margin:0;background:#fff;font-family:Segoe UI,Arial,sans-serif}
+</style>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="640" viewBox="0 0 1100 640" font-family="Segoe UI,Arial,sans-serif">
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#444"/></marker></defs>
+<rect width="1100" height="640" fill="#fff"/>
+<text x="550" y="38" text-anchor="middle" font-size="24" font-weight="600" fill="#222">UrbanDrive system architecture</text>
+
+<rect x="40" y="80" width="200" height="110" rx="10" fill="#e8f0fe" stroke="#3b6fd4" stroke-width="2"/>
+<text x="140" y="115" text-anchor="middle" font-size="18" font-weight="600">Browser</text>
+<text x="140" y="140" text-anchor="middle" font-size="14">Admin · Branch Manager</text>
+<text x="140" y="160" text-anchor="middle" font-size="14">· Customer</text>
+
+<rect x="320" y="70" width="460" height="290" rx="10" fill="#f3f3f3" stroke="#666" stroke-width="2"/>
+<text x="550" y="98" text-anchor="middle" font-size="18" font-weight="600">Next.js 16 app (web/)</text>
+<rect x="340" y="115" width="200" height="90" rx="8" fill="#fff" stroke="#888"/>
+<text x="440" y="142" text-anchor="middle" font-size="15" font-weight="600">Pages (React)</text>
+<text x="440" y="164" text-anchor="middle" font-size="13">Dashboard, Vehicles, Bookings,</text>
+<text x="440" y="182" text-anchor="middle" font-size="13">Customers, Maintenance, Reports</text>
+<rect x="560" y="115" width="200" height="90" rx="8" fill="#fff" stroke="#888"/>
+<text x="660" y="142" text-anchor="middle" font-size="15" font-weight="600">Route Handlers</text>
+<text x="660" y="164" text-anchor="middle" font-size="13">/api/bookings, /vehicles,</text>
+<text x="660" y="182" text-anchor="middle" font-size="13">/customers, /maintenance, /reports</text>
+<rect x="340" y="225" width="200" height="110" rx="8" fill="#fff" stroke="#888"/>
+<text x="440" y="252" text-anchor="middle" font-size="15" font-weight="600">Validation</text>
+<text x="440" y="274" text-anchor="middle" font-size="13">zod schemas on every write</text>
+<text x="440" y="296" text-anchor="middle" font-size="13">errors.ts maps DB errors</text>
+<text x="440" y="314" text-anchor="middle" font-size="13">to HTTP 400 / 409</text>
+<rect x="560" y="225" width="200" height="110" rx="8" fill="#fff" stroke="#888"/>
+<text x="660" y="252" text-anchor="middle" font-size="15" font-weight="600">Data access (lib/)</text>
+<text x="660" y="274" text-anchor="middle" font-size="13">db.ts: mysql2 pool</text>
+<text x="660" y="292" text-anchor="middle" font-size="13">mongo.ts: MongoDB driver</text>
+<text x="660" y="310" text-anchor="middle" font-size="13">queries.ts, insights.ts</text>
+
+<rect x="860" y="70" width="200" height="150" rx="10" fill="#e6f4ea" stroke="#2f8f4e" stroke-width="2"/>
+<text x="960" y="100" text-anchor="middle" font-size="18" font-weight="600">MySQL 8</text>
+<text x="960" y="122" text-anchor="middle" font-size="13">database mini_project</text>
+<text x="960" y="146" text-anchor="middle" font-size="13">8 tables, CHECK constraints</text>
+<text x="960" y="166" text-anchor="middle" font-size="13">4 views, 1 function</text>
+<text x="960" y="186" text-anchor="middle" font-size="13">3 triggers, 4 procedures</text>
+<text x="960" y="206" text-anchor="middle" font-size="13">(transactions)</text>
+
+<rect x="860" y="250" width="200" height="110" rx="10" fill="#fff4e0" stroke="#d98a1c" stroke-width="2"/>
+<text x="960" y="280" text-anchor="middle" font-size="18" font-weight="600">MongoDB</text>
+<text x="960" y="302" text-anchor="middle" font-size="13">database urbandrive</text>
+<text x="960" y="324" text-anchor="middle" font-size="13">vehicle_inspections</text>
+<text x="960" y="344" text-anchor="middle" font-size="13">vehicle_reviews</text>
+
+<line x1="240" y1="135" x2="318" y2="135" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
+<line x1="318" y1="160" x2="242" y2="160" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
+<text x="279" y="124" text-anchor="middle" font-size="12">HTTP</text>
+<line x1="760" y1="280" x2="858" y2="130" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
+<text x="822" y="212" font-size="12">SQL / CALL sp_*</text>
+<line x1="760" y1="305" x2="858" y2="305" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
+<text x="780" y="296" font-size="12">find / aggregate</text>
+<line x1="540" y1="160" x2="558" y2="160" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
+<line x1="660" y1="205" x2="660" y2="223" stroke="#444" stroke-width="2" marker-end="url(#a)"/>
+
+<rect x="320" y="400" width="740" height="200" rx="10" fill="#fff" stroke="#bbb" stroke-dasharray="6 4"/>
+<text x="340" y="428" font-size="16" font-weight="600">How the two databases are linked</text>
+<text x="340" y="456" font-size="14">• Bookings, payments and fleet data live in MySQL (ACID, foreign keys, triggers).</text>
+<text x="340" y="480" font-size="14">• Inspections and reviews are documents in MongoDB; each stores vehicle_id, booking_id,</text>
+<text x="340" y="500" font-size="14">  customer_id as plain references to MySQL rows (no cross-database foreign key).</text>
+<text x="340" y="524" font-size="14">• Before writing a document the API checks that the booking exists in MySQL.</text>
+<text x="340" y="548" font-size="14">• Double-booking, licence expiry and mileage rules are enforced inside MySQL triggers,</text>
+<text x="340" y="568" font-size="14">  so they hold even if another client writes to the database.</text>
+<rect x="40" y="400" width="240" height="200" rx="10" fill="#fff" stroke="#bbb" stroke-dasharray="6 4"/>
+<text x="60" y="428" font-size="16" font-weight="600">Configuration</text>
+<text x="60" y="456" font-size="14">Connection settings come</text>
+<text x="60" y="476" font-size="14">from environment variables</text>
+<text x="60" y="496" font-size="14">(web/.env.example), never</text>
+<text x="60" y="516" font-size="14">from source code.</text>
+</svg>
