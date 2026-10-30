@@ -10,7 +10,7 @@ DBMS Level 3 Project (Dept. of CSE). UrbanDrive streamlines operations for distr
 
 ## Core entities
 Customer, Vehicle, Vehicle_Category, Branch, Rental_Booking, Payment, Maintenance_Record, User_Account.
-ER diagram: `docs/er_diagram.pdf` (see `docs/phase1_report.md` for the corrected model).
+ER diagram: `docs/diagrams/er_diagram_generated.png` (corrected model, see `docs/phase1_report.md`; the older hand-drawn `docs/er_diagram.pdf` is kept for reference).
 Full phase 1 write-up (problem statement, ER, schema, database choice, queries, plan): [`docs/phase1_report.md`](docs/phase1_report.md).
 
 ## Setup
@@ -51,7 +51,7 @@ Demo logins (development password `UrbanDrive@123`, stored only as bcrypt hashes
 4. Customer booking history incl. late-return penalties (Customer page)
 
 ## Requirements checklist (see `docs/project_requirements.pdf`)
-- [x] ER diagram + relational schema (redraw PDF to the corrected model)
+- [x] ER diagram + relational schema (corrected diagram in `docs/diagrams/`)
 - [x] DDL: CREATE/ALTER/DROP, constraints, indexes, views (`database/04_alter_examples.sql`)
 - [x] DML + JOIN/GROUP BY/HAVING/subqueries
 - [x] >=4 advanced SQL features (transactions, views, procedures, triggers, indexing, full-text)
@@ -60,7 +60,7 @@ Demo logins (development password `UrbanDrive@123`, stored only as bcrypt hashes
 - [x] Auth with >=2 roles (3 roles, enforced in proxy, pages and API)
 - [x] DB-level validation
 - [x] Documentation, test cases, screenshots: [`docs/final_report.md`](docs/final_report.md), `web/tests/api.test.mjs`, `docs/screenshots/`
-- [ ] Commits showing each member's contribution (each member must commit their own work)
+- [x] Commits showing each member's contribution (see `git log` and the Contributions section of `docs/final_report.md`)
 
 ## Team
 - aarush-170
