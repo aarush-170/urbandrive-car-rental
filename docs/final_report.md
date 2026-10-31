@@ -197,7 +197,7 @@ No vector search is used: the data is small and structured enough that a keyword
 | `database/03_advanced.sql` | 4 views, function `fn_late_fee`, 3 triggers, 4 stored procedures with transactions |
 | `database/04_alter_examples.sql` | ALTER TABLE add/modify/drop column, constraint and index, plus CREATE/DROP TABLE; reverts itself so it can be re-run |
 
-DML in the application: INSERT (customers, vehicles, maintenance, bookings, payments via procedure), UPDATE (vehicle status, booking lifecycle via procedures and triggers), DELETE (maintenance records, admin only), SELECT with JOIN, GROUP BY, HAVING, ORDER BY, aggregates and subqueries (`web/lib/queries.ts`).
+DML in the application: INSERT (customers, vehicles, maintenance, bookings, payments via procedure), UPDATE (vehicle status, booking lifecycle via procedures and triggers), DELETE (maintenance records, admin only), SELECT with JOIN, GROUP BY, HAVING (`repeatCustomers`, shown on the Reports page), ORDER BY, aggregates and subqueries (`web/lib/queries.ts`). A line-by-line map from each feature to its code is in [`demo_guide.md`](demo_guide.md).
 
 Advanced features (4 required, 7 present) are listed in phase 1 report section 5.4: transactions with row locking, triggers, views, stored function, indexing, full-text search and MongoDB aggregation.
 

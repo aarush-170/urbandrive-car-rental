@@ -117,6 +117,28 @@ export async function listCustomers(q?: string): Promise<CustomerRow[]> {
   );
 }
 
+export interface RepeatCustomer {
+  customer_id: number;
+  customer_name: string;
+  completed_bookings: number;
+  total_spent: number;
+  total_late_fees: number;
+}
+
+// Repeat customers: GROUP BY customer, HAVING filters the groups (at least `min` completed bookings).
+export async function repeatCustomers(min = 2): Promise<RepeatCustomer[]> {
+  return query<RepeatCustomer>(
+    `SELECT c.customer_id, CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+            COUNT(*) AS completed_bookings, SUM(b.total_amount) AS total_spent, SUM(b.late_fee) AS total_late_fees
+     FROM Customer c JOIN Rental_Booking b ON b.customer_id = c.customer_id
+     WHERE b.booking_status = 'Completed'
+     GROUP BY c.customer_id, c.first_name, c.last_name
+     HAVING COUNT(*) >= ?
+     ORDER BY total_spent DESC`,
+    [min],
+  );
+}
+
 export async function getCustomer(id: number): Promise<CustomerRow | undefined> {
   return (await listCustomers()).find((c) => c.customer_id === id);
 }

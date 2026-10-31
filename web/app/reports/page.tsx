@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ADMIN, requirePage } from "@/lib/auth";
 import { inr, intParam, km } from "@/lib/format";
-import { branchAvailability, maintenanceDue, revenueByCategory, revenueQuarters } from "@/lib/queries";
+import { branchAvailability, maintenanceDue, repeatCustomers, revenueByCategory, revenueQuarters } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -12,10 +12,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const quarters = await revenueQuarters();
   const yr = intParam(sp.year) ?? quarters[0]?.yr;
   const qtr = intParam(sp.quarter) ?? quarters[0]?.qtr;
-  const [revenue, due, availability] = await Promise.all([
+  const [revenue, due, availability, repeat] = await Promise.all([
     yr && qtr ? revenueByCategory({ yr, qtr }) : Promise.resolve([]),
     maintenanceDue(miles),
     branchAvailability(),
+    repeatCustomers(intParam(sp.repeat) ?? 2),
   ]);
   const total = revenue.reduce((s, r) => s + r.revenue, 0);
   const max = Math.max(1, ...revenue.map((r) => r.revenue));
@@ -89,6 +90,21 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
                 {cats.map((c) => <td key={c} className="num">{cell.get(`${name}|${c}`) ?? "-"}</td>)}
               </tr>
             ))}
+          </tbody>
+        </table>
+      </div>
+      <h2>Repeat customers (2 or more completed bookings)</h2>
+      <div className="tbl-wrap">
+        <table className="tbl">
+          <thead><tr><th>Customer</th><th className="num">Completed bookings</th><th className="num">Spent</th><th className="num">Late fees</th></tr></thead>
+          <tbody>
+            {repeat.map((r) => (
+              <tr key={r.customer_id}>
+                <td><Link href={`/customers/${r.customer_id}`}>{r.customer_name}</Link></td>
+                <td className="num">{r.completed_bookings}</td><td className="num">{inr(r.total_spent)}</td><td className="num">{r.total_late_fees ? inr(r.total_late_fees) : "-"}</td>
+              </tr>
+            ))}
+            {repeat.length === 0 && <tr><td colSpan={4} className="muted">No repeat customers yet.</td></tr>}
           </tbody>
         </table>
       </div>
