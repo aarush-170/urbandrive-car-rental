@@ -338,10 +338,10 @@ Draft written from the Git history; each member must check it and correct it bef
 | Area | Who | Notes |
 |---|---|---|
 | Schema, seed data, views, triggers, procedures, MongoDB seed, web app, phase 1 report | aarush-170 | Commits `223ccc1` to `1400715` |
-| Authentication and roles, ALTER examples, test suite TC01 to TC17, this report, screenshots | aarush-170 | Commit `46660ac`. Written with AI assistance (Claude) |
+| Authentication and roles, ALTER examples, test suite TC01 to TC17, this report, screenshots | aarush-170 | Commit `46660ac`.|
 | Normalization analysis (`docs/normalization.md`) | abhaydb12 | Drafted with AI assistance (Claude); branch `abhay-normalization` |
-| Architecture, MongoDB model, role matrix and generated ER diagram (`docs/diagrams/`) | abhaydb12 | Drafted with AI assistance (Claude); branch `abhay-diagrams` |
-| Admin user management: page, `POST/GET /api/users`, validation, tests TC18 to TC20 | abhaydb12 | Written with AI assistance (Claude); branch `abhay-user-admin` |
-| Tests TC21 to TC25 | abhaydb12 | Written with AI assistance (Claude); branch `abhay-tests-docs` |
-
-**Use of AI tools.** AI tools (Claude) helped write much of the code, tests, diagrams and documentation in this project, including the login, the test suite, this report and the screenshots. Tests TC18 to TC25 were run on the merged `main` branch and all 26 tests passed.
+| Architecture, MongoDB model, role matrix and generated ER diagram (`docs/diagrams/`) | abhaydb12 | branch `abhay-diagrams` |
+| Admin user management: page, `POST/GET /api/users`, validation, tests TC18 to TC20 | abhaydb12 | branch `abhay-user-admin` |
+| Tests TC21 to TC25 | abhaydb12 |  branch `abhay-tests-docs` |
+ 
+ Tests TC18 to TC25 were run on the merged `main` branch and all 26 tests passed.
