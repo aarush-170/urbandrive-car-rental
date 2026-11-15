@@ -1,0 +1,15 @@
+mysql> DESCRIBE Vehicle;
++-------------------+-------------+------+-----+-----------+----------------+
+| Field             | Type        | Null | Key | Default   | Extra          |
++-------------------+-------------+------+-----+-----------+----------------+
+| vehicle_id        | int         | NO   | PRI | NULL      | auto_increment |
+| vin               | varchar(17) | NO   | UNI | NULL      |                |
+| license_plate     | varchar(15) | NO   | UNI | NULL      |                |
+| make              | varchar(50) | NO   | MUL | NULL      |                |
+| model             | varchar(50) | NO   |     | NULL      |                |
+| manufacture_year  | int         | YES  |     | NULL      |                |
+| current_mileage   | int         | NO   |     | 0         |                |
+| status            | varchar(20) | NO   |     | Available |                |
+| category_id       | int         | NO   | MUL | NULL      |                |
+| current_branch_id | int         | NO   | MUL | NULL      |                |
++-------------------+-------------+------+-----+-----------+----------------+

@@ -1,0 +1,11 @@
+mysql> SELECT make, model, license_plate, current_mileage, miles_since_service FROM vw_maintenance_due WHERE miles_since_service > 10000 ORDER BY miles_since_service DESC;
++---------+---------------+---------------+-----------------+---------------------+
+| make    | model         | license_plate | current_mileage | miles_since_service |
++---------+---------------+---------------+-----------------+---------------------+
+| Kia     | Seltos        | KA19LM6007    |           22800 |               22800 |
+| Hyundai | i20           | KA19CD2003    |           14000 |               14000 |
+| Hyundai | Verna         | KA03GH4005    |           12000 |               12000 |
+| Toyota  | Innova Crysta | MH02ST9010    |           45700 |               11700 |
+| MG      | ZS EV         | TS09EV8018    |           11500 |               11500 |
+| Isuzu   | D-Max V-Cross | MH12CD5015    |           19000 |               11000 |
++---------+---------------+---------------+-----------------+---------------------+

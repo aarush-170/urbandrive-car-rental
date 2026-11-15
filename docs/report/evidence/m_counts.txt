@@ -1,0 +1,5 @@
+urbandrive> printjson({ vehicle_inspections: db.vehicle_inspections.countDocuments(), vehicle_reviews: db.vehicle_reviews.countDocuments() })
+{
+  vehicle_inspections: 12,
+  vehicle_reviews: 12
+}

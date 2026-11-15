@@ -1,0 +1,2 @@
+mysql> DELETE FROM Branch WHERE branch_id = 1;
+ERROR 1451 (23000) at line 1: Cannot delete or update a parent row: a foreign key constraint fails (`mini_project`.`rental_booking`, CONSTRAINT `fk_booking_dropoff` FOREIGN KEY (`dropoff_branch_id`) REFERENCES `branch` (`branch_id`))

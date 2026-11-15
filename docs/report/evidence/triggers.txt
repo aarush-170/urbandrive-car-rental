@@ -1,0 +1,8 @@
+mysql> SELECT TRIGGER_NAME, ACTION_TIMING, EVENT_MANIPULATION, EVENT_OBJECT_TABLE FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA = 'mini_project';
++-------------------------------+---------------+--------------------+--------------------+
+| TRIGGER_NAME                  | ACTION_TIMING | EVENT_MANIPULATION | EVENT_OBJECT_TABLE |
++-------------------------------+---------------+--------------------+--------------------+
+| trg_booking_before_insert     | BEFORE        | INSERT             | rental_booking     |
+| trg_booking_after_update      | AFTER         | UPDATE             | rental_booking     |
+| trg_maintenance_before_insert | BEFORE        | INSERT             | maintenance_record |
++-------------------------------+---------------+--------------------+--------------------+

@@ -1,0 +1,2 @@
+mysql> INSERT INTO Maintenance_Record (vehicle_id, service_date, service_type, mileage_at_service, cost) VALUES (1, '2026-11-15', 'Oil change', 99999999, 100);
+ERROR 1644 (45000) at line 1: Mileage at service exceeds the vehicle current mileage

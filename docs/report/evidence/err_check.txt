@@ -1,0 +1,2 @@
+mysql> INSERT INTO Vehicle (vin, license_plate, make, model, manufacture_year, current_mileage, status, category_id, current_branch_id) VALUES ('SHORTVIN','ZZ00ZZ0000','Test','Car',2024,0,'Available',1,1);
+ERROR 3819 (HY000) at line 1: Check constraint 'chk_vehicle_vin' is violated.

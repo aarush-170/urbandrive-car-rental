@@ -1,0 +1,13 @@
+mysql> SELECT 'Branch' AS tbl, COUNT(*) AS row_count FROM Branch UNION ALL SELECT 'Vehicle_Category', COUNT(*) FROM Vehicle_Category UNION ALL SELECT 'Customer', COUNT(*) FROM Customer UNION ALL SELECT 'Vehicle', COUNT(*) FROM Vehicle UNION ALL SELECT 'Rental_Booking', COUNT(*) FROM Rental_Booking UNION ALL SELECT 'Payment', COUNT(*) FROM Payment UNION ALL SELECT 'Maintenance_Record', COUNT(*) FROM Maintenance_Record UNION ALL SELECT 'User_Account', COUNT(*) FROM User_Account;
++--------------------+-----------+
+| tbl                | row_count |
++--------------------+-----------+
+| Branch             |        10 |
+| Vehicle_Category   |        10 |
+| Customer           |        12 |
+| Vehicle            |        20 |
+| Rental_Booking     |        21 |
+| Payment            |        34 |
+| Maintenance_Record |        14 |
+| User_Account       |        11 |
++--------------------+-----------+

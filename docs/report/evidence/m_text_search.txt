@@ -1,0 +1,8 @@
+urbandrive> printjson(db.vehicle_reviews.find({ $text: { $search: 'battery' } }, { _id: 0, vehicle_id: 1, rating: 1, comment: 1 }).toArray())
+[
+  {
+    vehicle_id: 18,
+    rating: 3,
+    comment: 'Good range but the battery was low when I picked it up.'
+  }
+]

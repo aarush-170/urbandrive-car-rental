@@ -1,0 +1,20 @@
+mysql> SELECT TABLE_NAME, INDEX_NAME, GROUP_CONCAT(COLUMN_NAME ORDER BY SEQ_IN_INDEX) AS columns_indexed, INDEX_TYPE FROM information_schema.STATISTICS WHERE TABLE_SCHEMA = 'mini_project' AND TABLE_NAME IN ('rental_booking','vehicle','payment') GROUP BY TABLE_NAME, INDEX_NAME, INDEX_TYPE ORDER BY TABLE_NAME, INDEX_NAME;
++----------------+---------------------------+--------------------------------------+------------+
+| TABLE_NAME     | INDEX_NAME                | columns_indexed                      | INDEX_TYPE |
++----------------+---------------------------+--------------------------------------+------------+
+| payment        | idx_payment_booking       | booking_id                           | BTREE      |
+| payment        | idx_payment_status_date   | payment_status,payment_date          | BTREE      |
+| payment        | PRIMARY                   | payment_id                           | BTREE      |
+| rental_booking | idx_booking_customer      | customer_id                          | BTREE      |
+| rental_booking | idx_booking_dropoff       | dropoff_branch_id                    | BTREE      |
+| rental_booking | idx_booking_pickup        | pickup_branch_id                     | BTREE      |
+| rental_booking | idx_booking_status        | booking_status                       | BTREE      |
+| rental_booking | idx_booking_vehicle_dates | vehicle_id,start_date,end_date       | BTREE      |
+| rental_booking | PRIMARY                   | booking_id                           | BTREE      |
+| vehicle        | ft_vehicle_search         | make,model                           | FULLTEXT   |
+| vehicle        | idx_vehicle_branch_status | current_branch_id,status,category_id | BTREE      |
+| vehicle        | idx_vehicle_category      | category_id                          | BTREE      |
+| vehicle        | PRIMARY                   | vehicle_id                           | BTREE      |
+| vehicle        | uq_vehicle_plate          | license_plate                        | BTREE      |
+| vehicle        | uq_vehicle_vin            | vin                                  | BTREE      |
++----------------+---------------------------+--------------------------------------+------------+

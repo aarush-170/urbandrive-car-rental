@@ -1,0 +1,30 @@
+web> npm test
+ok 1 - TC01 login succeeds with a valid password and returns the role
+ok 2 - TC02 login fails with a wrong password or unknown user (same message)
+ok 3 - TC03 session cookie is HttpOnly and the password hash is never returned
+ok 4 - TC04 API without a session is rejected with 401, pages redirect to /login
+ok 5 - TC05 forged session cookie is rejected
+ok 6 - TC06 role matrix: customers cannot reach staff or admin resources
+ok 7 - TC07 role matrix: branch manager can run staff operations but not revenue reports
+ok 8 - TC08 admin can read the revenue report (GROUP BY on a view)
+ok 9 - TC09 a customer sees only their own bookings; admin sees all
+ok 10 - TC10 only admins can add vehicles; customers cannot change vehicle status
+ok 11 - TC11 input validation: bad phone number and short VIN are rejected (400)
+ok 12 - TC12 trigger: maintenance mileage above the vehicle's mileage is rejected (409)
+ok 13 - TC13 transaction + trigger: booking, double booking rejected, customer cancel
+ok 14 - TC13b a booking that starts in the past is rejected (400)
+ok 15 - TC14 a customer cannot cancel someone else's booking
+ok 16 - TC15 vehicle availability search for a date range (JOIN + subquery)
+ok 17 - TC16 MongoDB reviews: only completed bookings of the vehicle can be reviewed
+ok 18 - TC17 logout clears the session cookie
+ok 19 - TC18 admin creates a user; the new account can log in and the hash is never exposed
+ok 20 - TC19 branch managers and customers cannot create or list users (403)
+ok 21 - TC20 a duplicate username is rejected with 409
+ok 22 - TC21 a branch manager can change a vehicle's status, and an invalid status is rejected
+ok 23 - TC22 maintenance: insert, only an admin may delete it, and a second delete is 404
+ok 24 - TC23 MongoDB inspections: staff can post, customers cannot, booking must match the vehicle
+ok 25 - TC24 reviews: one per booking, only your own booking, rating must be 1 to 5
+ok 26 - TC25 customer search with ?q= filters by name and returns nothing for no match
+# tests 26
+# pass 26
+# fail 0

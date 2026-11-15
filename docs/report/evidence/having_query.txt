@@ -1,0 +1,8 @@
+mysql> SELECT c.customer_id, CONCAT(c.first_name,' ',c.last_name) AS customer_name, COUNT(*) AS completed_bookings, SUM(b.total_amount) AS total_spent FROM Customer c JOIN Rental_Booking b ON b.customer_id = c.customer_id WHERE b.booking_status = 'Completed' GROUP BY c.customer_id, c.first_name, c.last_name HAVING COUNT(*) >= 2 ORDER BY total_spent DESC;
++-------------+---------------+--------------------+-------------+
+| customer_id | customer_name | completed_bookings | total_spent |
++-------------+---------------+--------------------+-------------+
+|           3 | Vikram Singh  |                  2 |   124600.00 |
+|           1 | Rohan Mehta   |                  2 |    12600.00 |
+|           2 | Ananya Iyer   |                  2 |     9800.00 |
++-------------+---------------+--------------------+-------------+

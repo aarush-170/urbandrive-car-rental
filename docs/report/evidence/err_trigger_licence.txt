@@ -1,0 +1,2 @@
+mysql> CALL sp_create_booking(7, 4, 1, 1, '2027-01-05 10:00:00', '2027-01-08 10:00:00', 'UPI', @id);
+ERROR 1644 (45000) at line 1: Driving licence expires before the rental ends

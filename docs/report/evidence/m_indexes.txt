@@ -1,0 +1,11 @@
+urbandrive> printjson(db.vehicle_reviews.getIndexes().map(i => i.name).concat(db.vehicle_inspections.getIndexes().map(i => i.name)))
+[
+  '_id_',
+  'vehicle_id_1_created_at_-1',
+  'category_id_1_rating_-1',
+  'comment_text_tags_text',
+  '_id_',
+  'vehicle_id_1_inspected_at_-1',
+  'booking_id_1_type_1',
+  'damages.severity_1'
+]

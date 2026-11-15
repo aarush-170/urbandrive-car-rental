@@ -1,0 +1,2 @@
+mysql> CALL sp_create_booking(1, 11, 9, 9, '2026-11-11 10:00:00', '2026-11-12 10:00:00', 'UPI', @id);
+ERROR 1644 (45000) at line 1: Vehicle is already booked for these dates

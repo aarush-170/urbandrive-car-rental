@@ -1,0 +1,17 @@
+mysql> SHOW TABLES;
++--------------------------------+
+| Tables_in_mini_project         |
++--------------------------------+
+| branch                         |
+| customer                       |
+| maintenance_record             |
+| payment                        |
+| rental_booking                 |
+| user_account                   |
+| vehicle                        |
+| vehicle_category               |
+| vw_branch_availability         |
+| vw_customer_booking_history    |
+| vw_maintenance_due             |
+| vw_revenue_by_category_quarter |
++--------------------------------+

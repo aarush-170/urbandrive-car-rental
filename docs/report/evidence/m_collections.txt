@@ -1,0 +1,2 @@
+urbandrive> db.getCollectionNames()
+[ 'vehicle_inspections', 'vehicle_reviews' ]

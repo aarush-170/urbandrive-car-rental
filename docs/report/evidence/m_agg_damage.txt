@@ -1,0 +1,11 @@
+urbandrive> printjson(db.vehicle_inspections.aggregate([{ $unwind: '$damages' }, { $group: { _id: '$damages.severity', incidents: { $sum: 1 } } }, { $sort: { incidents: -1 } }]).toArray())
+[
+  {
+    _id: 'minor',
+    incidents: 4
+  },
+  {
+    _id: 'major',
+    incidents: 1
+  }
+]

@@ -1,0 +1,9 @@
+mysql> SELECT TABLE_NAME AS view_name FROM information_schema.VIEWS WHERE TABLE_SCHEMA = 'mini_project';
++--------------------------------+
+| view_name                      |
++--------------------------------+
+| vw_customer_booking_history    |
+| vw_revenue_by_category_quarter |
+| vw_maintenance_due             |
+| vw_branch_availability         |
++--------------------------------+

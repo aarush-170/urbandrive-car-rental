@@ -1,0 +1,10 @@
+mysql> SELECT ROUTINE_NAME, ROUTINE_TYPE FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA = 'mini_project' ORDER BY ROUTINE_TYPE, ROUTINE_NAME;
++-------------------+--------------+
+| ROUTINE_NAME      | ROUTINE_TYPE |
++-------------------+--------------+
+| fn_late_fee       | FUNCTION     |
+| sp_cancel_booking | PROCEDURE    |
+| sp_create_booking | PROCEDURE    |
+| sp_return_vehicle | PROCEDURE    |
+| sp_start_rental   | PROCEDURE    |
++-------------------+--------------+

@@ -1,0 +1,16 @@
+mysql> SELECT user_id, username, role, LEFT(password_hash, 7) AS hash_prefix, CHAR_LENGTH(password_hash) AS hash_length FROM User_Account;
++---------+--------------+----------------+-------------+-------------+
+| user_id | username     | role           | hash_prefix | hash_length |
++---------+--------------+----------------+-------------+-------------+
+|       1 | admin        | Admin          | $2b$10$     |          60 |
+|       2 | mgr_downtown | Branch_Manager | $2b$10$     |          60 |
+|       3 | mgr_mumbai   | Branch_Manager | $2b$10$     |          60 |
+|       4 | cust_rohan   | Customer       | $2b$10$     |          60 |
+|       5 | cust_ananya  | Customer       | $2b$10$     |          60 |
+|       6 | cust_vikram  | Customer       | $2b$10$     |          60 |
+|       7 | cust_priya   | Customer       | $2b$10$     |          60 |
+|       8 | cust_arjun   | Customer       | $2b$10$     |          60 |
+|       9 | cust_sneha   | Customer       | $2b$10$     |          60 |
+|      10 | cust_karthik | Customer       | $2b$10$     |          60 |
+|      11 | cust_meera   | Customer       | $2b$10$     |          60 |
++---------+--------------+----------------+-------------+-------------+

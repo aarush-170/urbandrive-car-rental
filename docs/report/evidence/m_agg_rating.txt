@@ -1,0 +1,23 @@
+urbandrive> printjson(db.vehicle_reviews.aggregate([{ $group: { _id: '$category_id', avg_rating: { $avg: '$rating' }, reviews: { $sum: 1 } } }, { $sort: { avg_rating: -1 } }, { $limit: 4 }]).toArray())
+[
+  {
+    _id: 6,
+    avg_rating: 5,
+    reviews: 2
+  },
+  {
+    _id: 3,
+    avg_rating: 5,
+    reviews: 1
+  },
+  {
+    _id: 5,
+    avg_rating: 5,
+    reviews: 1
+  },
+  {
+    _id: 7,
+    avg_rating: 4,
+    reviews: 1
+  }
+]
