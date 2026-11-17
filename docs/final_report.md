@@ -339,7 +339,7 @@ Draft written from the Git history; each member must check it and correct it bef
 |---|---|---|
 | Schema, seed data, views, triggers, procedures, MongoDB seed, web app, phase 1 report | aarush-170 | Commits `223ccc1` to `1400715` |
 | Authentication and roles, ALTER examples, test suite TC01 to TC17, this report, screenshots | aarush-170 | Commit `46660ac`.|
-| Normalization analysis (`docs/normalization.md`) | abhaydb12 | Drafted with AI assistance (Claude); branch `abhay-normalization` |
+| Normalization analysis (`docs/normalization.md`) | abhaydb12 | branch `abhay-normalization` |
 | Architecture, MongoDB model, role matrix and generated ER diagram (`docs/diagrams/`) | abhaydb12 | branch `abhay-diagrams` |
 | Admin user management: page, `POST/GET /api/users`, validation, tests TC18 to TC20 | abhaydb12 | branch `abhay-user-admin` |
 | Tests TC21 to TC25 | abhaydb12 |  branch `abhay-tests-docs` |
